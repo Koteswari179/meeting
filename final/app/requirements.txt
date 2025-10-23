@@ -1,8 +1,8 @@
 # Core Framework
-Django==5.0.6
+Django==5.2
 
 # Database
-mysqlclient==2.2.4          # Use if connecting Django with MySQL
+mysqlclient==2.2.7          # Use if connecting Django with MySQL
 # or use the alternative if mysqlclient fails to install:
 # PyMySQL==1.1.0
 
@@ -24,10 +24,10 @@ django-crispy-forms==2.2
 crispy-bootstrap5==0.7
 
 # For handling CORS or APIs (if frontend connects separately)
-django-cors-headers==4.4.0
+
 
 # For JSON / REST API (optional, if you use API endpoints)
-djangorestframework==3.15.2
+
 
 # For handling OTP timestamps / token expiry
 python-dateutil==2.9.0
