@@ -1,0 +1,390 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My App{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <!-- ✅ Navbar -->
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow">
+      <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+          <img src="{% static 'images/image.png' %}" alt="Logo" onerror="this.style.display='none';" style="height: 40px; border-radius: 8px; margin-right: 10px;">
+          Admin Panel
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+    
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'meetings_list' %}">Meetings</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'check_location' %}">Check Location</a></li>
+            <!-- <li class="nav-item"><a class="nav-link" href="{% url 'signup_list' %}">Users</a></li> -->
+            <li class="nav-item">
+              <span class="nav-link disabled" style="color: white;">
+                Logged in as: <strong>{{ user.name|default:"Admin" }}</strong>
+              </span>
+            </li>
+            {% if user %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+            {% else %}
+              <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+    
+
+    <!-- ✅ Page Content -->
+    <div class="container mt-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show mb-3" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <!-- Bootstrap JS Bundle (for alerts, dropdowns, etc.) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        /* ==========================================================================
+   Base Styles - Global Typography and Layout
+   ========================================================================== */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* ==========================================================================
+   Navbar - Logo and Navigation
+   ========================================================================== */
+.navbar {
+    background: linear-gradient(135deg, #0d6efd, #0a58ca);
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo img {
+    height: 45px;
+    width: auto;
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+}
+
+.logo img:hover {
+    transform: scale(1.05);
+    border-color: rgba(255, 255, 255, 1);
+}
+
+.logo span {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+.nav-item {
+    margin: 0;
+}
+
+.nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+}
+
+.nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #ffd700;  /* Gold hover for emphasis */
+    transform: translateY(-1px);
+}
+
+/* Non-clickable user display (no hover effects) */
+.logged-in-user {
+    cursor: default;
+    background: none !important;
+    padding: 0.6rem 0.8rem !important;
+}
+
+.logged-in-user:hover {
+    background: none !important;
+    color: white !important;
+    transform: none !important;
+}
+
+/* ==========================================================================
+   Main Container and Content
+   ========================================================================== */
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.container h1, .container h2 {
+    color: #0d6efd;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* ==========================================================================
+   Messages/Alerts (Bootstrap Override)
+   ========================================================================== */
+.alert {
+    border-radius: 10px;
+    font-weight: 500;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.alert-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.alert-info {
+    background-color: #cff4fc;
+    color: #055160;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #58151c;
+}
+
+/* ==========================================================================
+   Forms and Inputs (General Enhancements)
+   ========================================================================== */
+input[type="text"], input[type="email"], input[type="password"], input[type="date"], 
+input[type="time"], input[type="number"], textarea, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+button, .btn {
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover, .btn:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-1px);
+}
+
+.btn-primary { background-color: #0d6efd; }
+.btn-secondary { background-color: #6c757d; }
+.btn-success { background-color: #198754; }
+.btn-danger { background-color: #dc3545; }
+.btn-warning { background-color: #ffc107; color: #000; }
+
+/* ==========================================================================
+   Tables (For Lists like Users/Persons)
+   ========================================================================== */
+.table {
+    margin-top: 20px;
+}
+
+.table th {
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+}
+
+.table td {
+    border-color: #e9ecef;
+}
+
+.table tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* ==========================================================================
+   Cards (For Dashboard/Location Cards)
+   ========================================================================== */
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    background: linear-gradient(135deg, #0d6efd, #0a58ca);
+    color: white;
+    border-radius: 12px 12px 0 0 !important;
+}
+
+/* ==========================================================================
+   Custom Classes (e.g., Welcome Banner, Location Cards from Previous Templates)
+   ========================================================================== */
+.welcome-banner {
+    background-color: #e7f1ff;
+    padding: 10px 20px;
+    border-bottom: 1px solid #cfe2ff;
+    text-align: center;
+    font-weight: 600;
+    color: #0d6efd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.no-booking {
+    color: #198754;
+    font-weight: 500;
+}
+
+.location-card {
+    border: 1px solid #e0e0e0;
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    transition: box-shadow 0.2s ease;
+}
+
+.location-card:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================================================================
+   Links and Navigation (Bottom Links)
+   ========================================================================== */
+.links a {
+    color: #0d6efd;
+    text-decoration: none;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+}
+
+.links a:hover {
+    color: #0b5ed7;
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .nav-list {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .nav-link {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.9rem;
+    }
+
+    .logo span {
+        font-size: 1.25rem;
+    }
+
+    .logo img {
+        height: 35px;
+    }
+
+    .container {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+
+    .table-responsive {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .nav-list {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-link {
+        width: 100%;
+        text-align: center;
+    }
+}
+    </style>
+</body>
+</html>

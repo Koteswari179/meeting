@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% block subject %}Signup List{% endblock %}
+
+{% block content %}
+<style>
+/* Page Layout */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8fafc;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container */
+.container {
+    width: 90%;
+    max-width: 1000px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+/* Header */
+h1 {
+    text-align: center;
+    color: #1e293b;
+    margin-bottom: 25px;
+    font-size: 28px;
+}
+
+/* Success Message */
+.message {
+    text-align: center;
+    background-color: #e6f9ec;
+    color: #137333;
+    border: 1px solid #b4e0ba;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+    background-color: #fff;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: center;
+}
+
+th {
+    background-color: #2563eb;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+tr:nth-child(even) {
+    background-color: #f1f5f9;
+}
+
+tr:hover {
+    background-color: #e2e8f0;
+    transition: background-color 0.3s ease;
+}
+
+/* Action Buttons */
+.action-links a {
+    text-decoration: none;
+    color: #2563eb;
+    font-weight: 500;
+    margin: 0 8px;
+    transition: color 0.3s;
+}
+
+.action-links a:hover {
+    color: #1d4ed8;
+}
+
+.action-links a.delete {
+    color: #dc2626;
+}
+
+.action-links a.delete:hover {
+    color: #b91c1c;
+}
+
+/* Back Button */
+.back-link {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 10px 18px;
+    background-color: #2563eb;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+
+.back-link:hover {
+    background-color: #1d4ed8;
+}
+</style>
+
+<div class="container">
+    <h1>📋 Signup Users List</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p class="message">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.mobile_number }}</td>
+                <td class="action-links">
+                    <a href="{% url 'edit_user' user.id %}">✏️ Edit</a> |
+                    <a href="{% url 'delete_user' user.id %}" class="delete" onclick="return confirm('Are you sure you want to delete this user?')">🗑️ Delete</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="color:gray;">No users signed up yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'signup' %}" class="back-link">⬅ Go Back to Signup Form</a>
+</div>
+{% endblock %}

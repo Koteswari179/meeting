@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block subject %}Edit Meeting{% endblock %}
+{% block content %}
+<div class="container mt-5" style="max-width: 600px;">
+    <h2 class="text-primary mb-3">✏️ Edit Meeting</h2>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">💾 Save Changes</button>
+        <a href="{% url 'meetings_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}
